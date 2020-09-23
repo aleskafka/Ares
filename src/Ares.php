@@ -173,6 +173,17 @@ class Ares
                     $record->setStreetHouseNumber(strval($elements->AA->CD));
                 }
 
+                if (isset($elements->ROR->SZ)) {
+                    $court = strval($elements->ROR->SZ->SD->T);
+
+                    if (preg_match('/^([A-Z]) ([0-9]+)$/', strval($elements->ROR->SZ->OV), $matches)) {
+                        $record->setCompany("$court, oddíl $matches[1]. vložka $matches[2]");
+
+                    } else {
+                        $record->setCompany(implode(', ', array_filter([$court, strval($elements->ROR->SZ->OV)])));
+                    }
+                }
+
                 if (strval($elements->AA->N) === 'Praha') { //Praha
                     $record->setTown(strval($elements->AA->NMC).' - '.strval($elements->AA->NCO));
                 } elseif (strval($elements->AA->NCO) !== strval($elements->AA->N)) { //Ostrava

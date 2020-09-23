@@ -27,6 +27,11 @@ class AresRecord
     /**
      * @var string
      */
+    private $company;
+
+    /**
+     * @var string
+     */
     private $companyName;
 
     /**
@@ -64,6 +69,7 @@ class AresRecord
      *
      * @param null $companyId
      * @param null $taxId
+     * @param null $company
      * @param null $companyName
      * @param null $street
      * @param null $streetHouseNumber
@@ -74,6 +80,7 @@ class AresRecord
     public function __construct(
         $companyId = null,
         $taxId = null,
+        $company = null,
         $companyName = null,
         $street = null,
         $streetHouseNumber = null,
@@ -83,6 +90,7 @@ class AresRecord
     ) {
         $this->companyId = $companyId;
         $this->taxId = !empty($taxId) ? $taxId : null;
+        $this->company = $company;
         $this->companyName = $companyName;
         $this->street = $street;
         $this->streetHouseNumber = !empty($streetHouseNumber) ? $streetHouseNumber : null;
@@ -126,6 +134,14 @@ class AresRecord
     public function getTaxId()
     {
         return $this->taxId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompany()
+    {
+        return $this->company;
     }
 
     /**
@@ -230,6 +246,14 @@ class AresRecord
     public function setTaxId($taxId)
     {
         $this->taxId = $taxId;
+    }
+
+    /**
+     * @param string $company
+     */
+    public function setCompany($company)
+    {
+        $this->company = $company;
     }
 
     /**
