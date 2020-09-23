@@ -3,6 +3,9 @@
 namespace Defr;
 
 use Defr\Ares\AresException;
+use Defr\Ares\RuntimeAresException;
+use Defr\Ares\UnavailableAresException;
+use Defr\Ares\NotfoundAresException;
 use Defr\Ares\AresRecord;
 use Defr\Ares\AresRecords;
 use Defr\Ares\TaxRecord;
@@ -156,7 +159,7 @@ class Ares
 
                 $ico = (int) $elements->ICO;
                 if ($ico !== $id) {
-                    throw new AresException('IČ firmy nebylo nalezeno.');
+                    throw new NotfoundAresException('IČ firmy nebylo nalezeno.');
                 }
 
                 $record = new AresRecord();
@@ -194,10 +197,10 @@ class Ares
 
                 $record->setZip(strval($elements->AA->PSC));
             } else {
-                throw new AresException('Databáze ARES není dostupná.');
+                throw new UnavailableAresException('Databáze ARES není dostupná.');
             }
         } catch (\Exception $e) {
-            throw new AresException($e->getMessage());
+            throw new RuntimeAresException($e->getMessage());
         }
 
         file_put_contents($cachedFile, serialize($record));
@@ -252,13 +255,13 @@ class Ares
                     $record->setTown(strval($elements->SI->N));
                     $record->setZip(strval($elements->SI->PSC));
                 } else {
-                    throw new AresException('IČ firmy nebylo nalezeno.');
+                    throw new NotfoundAresException('IČ firmy nebylo nalezeno.');
                 }
             } else {
-                throw new AresException('Databáze ARES není dostupná.');
+                throw new UnavailableAresException('Databáze ARES není dostupná.');
             }
         } catch (\Exception $e) {
-            throw new AresException($e->getMessage());
+            throw new RuntimeAresException($e->getMessage());
         }
         file_put_contents($cachedFile, serialize($record));
 
@@ -306,13 +309,13 @@ class Ares
                 if (strval($elements->ico) === $id) {
                     $record->setTaxId(str_replace('dic=', 'CZ', strval($elements->p_dph)));
                 } else {
-                    throw new AresException('DIČ firmy nebylo nalezeno.');
+                    throw new NotfoundAresException('DIČ firmy nebylo nalezeno.');
                 }
             } else {
-                throw new AresException('Databáze MFČR není dostupná.');
+                throw new UnavailableAresException('Databáze MFČR není dostupná.');
             }
         } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
+            throw new RuntimeAresException($e->getMessage());
         }
         file_put_contents($cachedFile, serialize($record));
 
@@ -354,7 +357,7 @@ class Ares
         }
         $aresResponse = simplexml_load_string($aresRequest);
         if (!$aresResponse) {
-            throw new AresException('Databáze ARES není dostupná.');
+            throw new UnavailableAresException('Databáze ARES není dostupná.');
         }
 
         $ns = $aresResponse->getDocNamespaces();
@@ -362,7 +365,7 @@ class Ares
         $elements = $data->children($ns['dtt'])->V->S;
 
         if (empty($elements)) {
-            throw new AresException('Nic nebylo nalezeno.');
+            throw new NotfoundAresException('Nic nebylo nalezeno.');
         }
 
         $records = new AresRecords();
