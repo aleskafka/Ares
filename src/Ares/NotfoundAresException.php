@@ -7,6 +7,6 @@ namespace Defr\Ares;
  *
  * @author Dennis Fridrich <fridrich.dennis@gmail.com>
  */
-class NotfoundAresExceptionAresException extends AresException
+class NotfoundAresException extends AresException
 {
 }
